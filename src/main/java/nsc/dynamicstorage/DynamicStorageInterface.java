@@ -10,14 +10,8 @@ public interface DynamicStorageInterface {
 
     public void remove(String path);
 
-    public void createFolder(String path);
-
     public byte[] getContent(String path) throws IOException;
 
     public boolean isExist(String path);
-
-    public String getInfo(String path);
-
-    public String getURL(String path);
 
 }

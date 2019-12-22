@@ -10,6 +10,18 @@ import java.io.*;
 public class NativeStorage implements DynamicStorageInterface {
     @Override
     public void save(MultipartFile multipartFile, String destinationPath) throws IOException {
+        String arr[] = destinationPath.split("/");
+        String destPath = "";
+        for (int i = 0; i < arr.length - 1; i++) {
+            if (!arr[i].isEmpty()) {
+                destPath = destPath + "/" + arr[i];
+            }
+        }
+        File f = new File(destPath);
+        if (!f.exists()) {
+            f.mkdirs();
+        }
+
         File fileContent = new File(destinationPath);
         BufferedOutputStream buf = new BufferedOutputStream(new FileOutputStream(fileContent));
         byte[] bytes = multipartFile.getBytes();
@@ -24,12 +36,6 @@ public class NativeStorage implements DynamicStorageInterface {
     }
 
     @Override
-    public void createFolder(String path) {
-        File f = new File(path);
-        f.mkdirs();
-    }
-
-    @Override
     public byte[] getContent(String path) throws IOException {
         InputStream in = new FileInputStream(new File(path));
         return IOUtils.toByteArray(in);
@@ -41,13 +47,4 @@ public class NativeStorage implements DynamicStorageInterface {
         return f.exists();
     }
 
-    @Override
-    public String getInfo(String path) {
-        return null;
-    }
-
-    @Override
-    public String getURL(String path) {
-        return null;
-    }
 }

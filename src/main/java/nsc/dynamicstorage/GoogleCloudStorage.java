@@ -54,11 +54,6 @@ public class GoogleCloudStorage implements DynamicStorageInterface {
     }
 
     @Override
-    public void createFolder(String path) {
-        new UnsupportedOperationException("Do not necessary in Google cloud storage");
-    }
-
-    @Override
     public byte[] getContent(String path) {
         Blob b = getBlob(path);
         return b.getContent();
@@ -68,16 +63,6 @@ public class GoogleCloudStorage implements DynamicStorageInterface {
     public boolean isExist(String path) {
         Blob b = getBlob(path);
         return b.exists();
-    }
-
-    @Override
-    public String getInfo(String path) {
-        return null;
-    }
-
-    @Override
-    public String getURL(String path) {
-        return null;
     }
 
     private String getBucketName(){
