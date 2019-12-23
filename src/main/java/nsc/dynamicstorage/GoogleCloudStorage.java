@@ -18,6 +18,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Google cloud storage
+ */
 @Component("google")
 @PropertySource("classpath:application.properties")
 public class GoogleCloudStorage implements DynamicStorageInterface {
@@ -28,12 +31,14 @@ public class GoogleCloudStorage implements DynamicStorageInterface {
     @Value("classpath:credentials.json")
     private Resource myFile;
 
-    private void setStorage(){
-        try {
-            Credentials credentials = GoogleCredentials.fromStream(myFile.getInputStream());
-            storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
-        } catch (IOException e) {
-            e.printStackTrace();
+    private void setStorage() {
+        if (storage == null) {
+            try {
+                Credentials credentials = GoogleCredentials.fromStream(myFile.getInputStream());
+                storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -71,9 +76,9 @@ public class GoogleCloudStorage implements DynamicStorageInterface {
         return b.exists();
     }
 
-    private String getBucketName(){
+    private String getBucketName() {
         String bucketName = env.getProperty("dynamicstorage.google.bucketname");
-        if(bucketName == null){
+        if (bucketName == null) {
             new RuntimeException("Please config dynamicstorage.google.bucketname in application.properties");
         }
         return bucketName;

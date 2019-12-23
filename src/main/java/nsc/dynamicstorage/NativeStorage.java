@@ -6,6 +6,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 
+/**
+ * Local computer
+ */
 @Component("native")
 public class NativeStorage implements DynamicStorageInterface {
     @Override

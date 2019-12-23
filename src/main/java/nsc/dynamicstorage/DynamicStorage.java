@@ -9,6 +9,9 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import java.io.IOException;
 
+/**
+ * This is a class for using main operation.
+ */
 @Component
 @PropertySource("classpath:application.properties")
 public class DynamicStorage {
