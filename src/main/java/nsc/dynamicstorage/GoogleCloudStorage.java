@@ -4,9 +4,11 @@ import com.google.auth.Credentials;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.storage.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,10 +25,12 @@ public class GoogleCloudStorage implements DynamicStorageInterface {
     @Autowired
     private Environment env;
 
-    public GoogleCloudStorage() {
+    @Value("classpath:credentials.json")
+    private Resource myFile;
+
+    private void setStorage(){
         try {
-            File file = new ClassPathResource("credentials.json").getFile();
-            Credentials credentials = GoogleCredentials.fromStream(new FileInputStream(file));
+            Credentials credentials = GoogleCredentials.fromStream(myFile.getInputStream());
             storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
         } catch (IOException e) {
             e.printStackTrace();
@@ -35,6 +39,7 @@ public class GoogleCloudStorage implements DynamicStorageInterface {
 
     @Override
     public void save(MultipartFile multipartFile, String destinationPath) throws IOException {
+        setStorage();
         List<Acl> acls = new ArrayList<>();
         acls.add(Acl.of(Acl.User.ofAllUsers(), Acl.Role.READER));
         Blob blob =
@@ -50,6 +55,7 @@ public class GoogleCloudStorage implements DynamicStorageInterface {
     }
 
     private Blob getBlob(String path) {
+        setStorage();
         return storage.get(getBucketName(), path);
     }
 
