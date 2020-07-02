@@ -45,11 +45,12 @@ public class GoogleCloudStorage implements DynamicStorageInterface {
     @Override
     public void save(MultipartFile multipartFile, String destinationPath) throws IOException {
         setStorage();
+        System.out.println(multipartFile.getContentType());
         List<Acl> acls = new ArrayList<>();
         acls.add(Acl.of(Acl.User.ofAllUsers(), Acl.Role.READER));
         Blob blob =
                 storage.create(
-                        BlobInfo.newBuilder(getBucketName(), destinationPath).setAcl(acls).setContentType("image/png").build(),
+                        BlobInfo.newBuilder(getBucketName(), destinationPath).setAcl(acls).setContentType(multipartFile.getContentType()).build(),
                         multipartFile.getBytes());
     }
 
