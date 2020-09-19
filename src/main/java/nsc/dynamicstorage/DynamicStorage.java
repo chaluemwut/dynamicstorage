@@ -1,6 +1,7 @@
 package nsc.dynamicstorage;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
@@ -13,10 +14,10 @@ import java.io.IOException;
  * This is a class for using main operation.
  */
 @Component
-@PropertySource("classpath:application.properties")
 public class DynamicStorage {
-    @Autowired
-    private Environment env;
+
+    @Value("${dynamicstorage.provider}")
+    private String fsName;
 
     @Resource(name = "google")
     private DynamicStorageInterface dsGoogle;
@@ -41,7 +42,6 @@ public class DynamicStorage {
 
     private DynamicStorageInterface getFSInterface() {
         DynamicStorageInterface dynamicStorageInterface = null;
-        String fsName = env.getProperty("dynamicstorage.provider");
         if (fsName == null) {
             new RuntimeException("Please config dynamicstorage.provider in application.properties");
         }
